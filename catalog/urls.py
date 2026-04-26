@@ -1,6 +1,9 @@
 from django.urls import path
 from .import views
 
-urlpatterns=[
+app_name = 'catalog'
 
+urlpatterns=[
+    path("contacts/", views.contacts, name="contacts"),
+    path("home/", views.home, name="home"),
 ]
