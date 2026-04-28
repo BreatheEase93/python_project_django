@@ -25,18 +25,16 @@
             <div class="card mb-4 box-shadow">
                 <div class="card-body">
                     <table class="table table-striped">
+                        {% for contact in contact_list %}
                         <tr>
-                            <td class="w-25">Страна</td>
-                            <td>USA</td>
+                            <td class="w-25">Контакт: {{ contact.name }}</td>
+                            <td>{{ contact.phone }}<br>{{ contact.message }}</td>
                         </tr>
+                        {% empty %}
                         <tr>
-                            <td class="w-25">ИНН</td>
-                            <td>91-1144442</td>
+                            <td colspan="2">Контактные данные не заполнены в админке.</td>
                         </tr>
-                        <tr>
-                            <td class="w-25">Адрес</td>
-                            <td>Redmond,WA,98052-6399</td>
-                        </tr>
+                        {% endfor %}
                     </table>
                 </div>
             </div>
