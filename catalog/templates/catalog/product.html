@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Продукт — {{ object.name }}</title> <!-- Добавили object. -->
+</head>
+<body>
+    <h1>Информация о товаре: {{ object.name }}</h1> <!-- Добавили object. -->
+    <p><strong>Описание:</strong> {{ object.description }}</p> <!-- Добавили object. -->
+
+    <div>
+        {% if object.image %} <!-- Добавили object. -->
+            <img src="{{ object.image.url }}" alt="{{ object.name }}" style="max-width: 300px; height: auto;">
+        {% else %}
+            <img src="{% static 'images/no-image.webp' %}" alt="Нет фото" style="max-width: 300px; height: auto;">
+        {% endif %}
+    </div>
+
+    <p><strong>Категория:</strong> {{ object.category.name }}</p> <!-- Добавили object. -->
+    <p><strong>Цена:</strong> {{ object.price }} руб.</p> <!-- Добавили object. -->
+    <p><strong>Дата создания:</strong> {{ object.created_at|date:"d.m.Y" }}</p> <!-- Добавили object. -->
+</body>
+</html>

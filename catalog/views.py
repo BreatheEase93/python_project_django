@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from catalog.models import Product, Contact
 
 
@@ -27,3 +27,12 @@ def index(request):
         print(f"ID: {product.id}, Название: {product.name}, Цена: {product.price}")
 
     return render(request, 'catalog/home.html')
+
+
+def show_product(request, pk: int):
+    """Страница подробной информации о товаре"""
+    product = get_object_or_404(Product, id=pk)
+    context = {
+        "object": product,
+    }
+    return render(request, "catalog/product_detail.html", context)
