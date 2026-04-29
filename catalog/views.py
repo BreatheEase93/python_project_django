@@ -21,12 +21,12 @@ def home(request):
 
 
 def index(request):
-    """Получаем 5 последних товаров"""
+    """Получаем 5 последних товаров и передаем их в шаблон"""
     latest_products = Product.objects.all().order_by('-created_at')[:5]
-    for product in latest_products:
-        print(f"ID: {product.id}, Название: {product.name}, Цена: {product.price}")
-
-    return render(request, 'catalog/home.html')
+    context = {
+        'products': latest_products
+    }
+    return render(request, 'catalog/home.html', context)
 
 
 def show_product(request, pk: int):
