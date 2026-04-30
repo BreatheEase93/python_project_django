@@ -1,0 +1,12 @@
+{% extends 'catalog/base.html' %}
+{% block content %}
+    <div class="alert alert-warning text-center">
+        <h2>Удалить категорию "{{ object.name }}"?</h2>
+        <p>Все продукты в этой категории также будут удалены!</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Подтвердить удаление</button>
+            <a href="{% url 'catalog:categories' %}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+{% endblock %}

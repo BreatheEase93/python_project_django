@@ -1,0 +1,27 @@
+{% extends 'catalog/base.html' %}
+{% load static %}
+
+{% block title %}{{ object.name }} - Skystore{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        {% if object.image %}
+            <img src="{{ object.image.url }}" class="img-fluid rounded shadow" alt="{{ object.name }}">
+        {% else %}
+            <img src="{% static 'images/no-image.webp' %}" class="img-fluid rounded shadow" alt="Нет фото">
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        <h1 class="display-4">{{ object.name }}</h1>
+        <p class="badge bg-info text-dark fs-5">Категория: {{ object.category.name }}</p>
+        <h2 class="text-primary mt-3">{{ object.price }} ₽</h2>
+        <hr>
+        <p class="lead">{{ object.description }}</p>
+        <div class="mt-5">
+            <a href="{% url 'catalog:index' %}" class="btn btn-outline-secondary">Назад к списку</a>
+            <a href="{% url 'catalog:product_update' object.pk %}" class="btn btn-warning">Редактировать</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

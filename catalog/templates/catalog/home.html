@@ -1,26 +1,44 @@
 {% extends 'catalog/base.html' %}
+{% load static %}
 
-{% block title %}Главная - Skystore{% endblock %}
+{% block title %}
+    Главная - Skystore
+{% endblock %}
 
 {% block content %}
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-    <h1 class="display-4">Skystore</h1>
-    <p class="lead">Лучшие плагины и примеры кода.</p>
+    <h1 class="display-4">Каталог товаров</h1>
+    <p class="lead">Последние поступления в наш магазин</p>
+    <a href="{% url 'catalog:product_create' %}" class="btn btn-success">Добавить товар</a>
 </div>
 
-<div class="row text-center">
+<div class="row text-center mt-4">
     {% for product in products %}
-    <div class="col-3">
-        <div class="card mb-4 box-shadow">
+    <div class="col-md-4 d-flex align-items-stretch">
+        <div class="card mb-4 box-shadow w-100 d-flex flex-column">
             <div class="card-header">
                 <h4 class="my-0 font-weight-normal">{{ product.name }}</h4>
             </div>
-            <div class="card-body">
-                <h1 class="card-title pricing-card-title">$ {{ product.price }}</h1>
-                <p>{{ product.description|truncatechars:100 }}</p>
-                <a href="{% url 'catalog:product' product.pk %}" class="btn btn-lg btn-block btn-outline-primary">Посмотреть</a>
+            <div class="card-body d-flex flex-column flex-grow-1">
+                <!-- Логика вывода изображения -->
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="img-fluid mb-3" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                    <img src="{% static 'images/no-image.webp' %}" class="img-fluid mb-3" alt="Нет фото" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                <h1 class="card-title pricing-card-title">{{ product.price }} ₽</h1>
+                <p class="text-start flex-grow-1">{{ product.description|truncatechars:100 }}</p>
+                <div class="btn-group w-100 mt-auto">
+                    <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-sm btn-outline-primary">Инфо</a>
+                    <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-sm btn-outline-secondary">Изменить</a>
+                    <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-sm btn-outline-danger">Удалить</a>
+                </div>
             </div>
         </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center">
+        <p class="alert alert-secondary">В каталоге пока нет ни одного товара.</p>
     </div>
     {% endfor %}
 </div>

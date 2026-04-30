@@ -7,7 +7,7 @@ app_name = 'catalog'
 
 urlpatterns = [
     # Главная со списком продуктов
-    path('', views.ProductListView.as_view(), name='home'),
+    path('', views.ProductListView.as_view(), name='index'),
 
     # Страница контактов
     path('contacts/', views.FeedbackCreateView.as_view(), name='contacts'),
