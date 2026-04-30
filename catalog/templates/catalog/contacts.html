@@ -4,41 +4,57 @@
 
 {% block content %}
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-    <h1 class="display-4">Свяжитесь с нами</h1>
-    <p class="lead">Оставьте свои данные, и мы обязательно перезвоним вам!</p>
+    <h1 class="display-4">Контакты</h1>
+    <p class="lead">Мы всегда на связи и готовы помочь!</p>
 </div>
 
-<div class="row justify-content-center">
+<div class="row mt-4">
+    <!-- Левая колонка: Информация о компании -->
     <div class="col-md-6">
-        <div class="card mb-4 box-shadow">
+        <div class="card mb-4 box-shadow h-100">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">Наши данные</h4>
+            </div>
             <div class="card-body">
-                <form method="post">
-                    {% csrf_token %} <!-- Обязательный тег для защиты форм в Django -->
-                    <div class="form-group mb-3">
-                        <label for="name">Имя</label>
-                        <input type="text" name="name" id="name" class="form-control" placeholder="Введите ваше имя" required>
+                {% for contact in contact_data %}
+                    <div class="mb-4">
+                        <h5 class="text-primary">{{ contact.name }}</h5>
+                        <p class="mb-1"><strong>Телефон:</strong> {{ contact.phone }}</p>
+                        <p><strong>Информация:</strong> {{ contact.message|default:"Адрес не указан" }}</p>
+                        {% if not forloop.last %}<hr>{% endif %}
                     </div>
-                    <div class="form-group mb-3">
-                        <label for="phone">Телефон</label>
-                        <input type="text" name="phone" id="phone" class="form-control" placeholder="Введите номер телефона" required>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="message">Сообщение</label>
-                        <textarea name="message" id="message" class="form-control" rows="3" placeholder="Ваш вопрос..."></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-lg btn-block btn-primary">Отправить</button>
-                </form>
+                {% empty %}
+                    <p class="text-muted">Контактная информация скоро появится.</p>
+                {% endfor %}
             </div>
         </div>
     </div>
-</div>
 
-<div class="row text-center mt-5">
-    <div class="col-12">
-        <h3>Наши контакты:</h3>
-        {% for contact in contact_list %}
-            <p><strong>Адрес:</strong> {{ contact.address }} | <strong>Телефон:</strong> {{ contact.phone }}</p>
-        {% endfor %}
+    <!-- Правая колонка: Форма обратной связи -->
+    <div class="col-md-6">
+        <div class="card mb-4 box-shadow h-100">
+            <div class="card-header text-white bg-primary">
+                <h4 class="my-0 font-weight-normal">Напишите нам</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group mb-3">
+                        <label for="id_name" class="form-label">Ваше имя / Компания</label>
+                        <input type="text" name="name" id="id_name" class="form-control" placeholder="Иван Иванов" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="id_phone" class="form-label">Телефон для связи</label>
+                        <input type="text" name="phone" id="id_phone" class="form-control" placeholder="+7 (999) 000-00-00" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="id_message" class="form-label">Сообщение</label>
+                        <textarea name="message" id="id_message" class="form-control" rows="4" placeholder="Опишите ваш вопрос..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-lg btn-primary w-100">Отправить сообщение</button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
