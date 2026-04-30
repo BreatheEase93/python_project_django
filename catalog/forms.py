@@ -12,33 +12,31 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = ('name', 'description', 'image', 'category', 'price',)
 
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'image': forms.FileInput(attrs={'class': 'form-control'}),
-            'category': forms.Select(attrs={'class': 'form-control'}),
-            'price': forms.NumberInput(attrs={'class': 'form-control'}),
-        }
+    def __init__(self, *args, **kwargs):
+        """Стилизация всех полей формы через цикл"""
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs['placeholder'] = f'Введите {field.label.lower()}'
+            if isinstance(field.widget, forms.CheckboxInput):
+                field.widget.attrs['class'] = 'form-check-input'
 
     def clean_name(self):
-        cleaned_data = self.cleaned_data['name']
+        name = self.cleaned_data.get('name')
         for word in self.FORBIDDEN_WORDS:
-            if word in cleaned_data.lower():
+            if word in name.lower():
                 raise forms.ValidationError(f'Название содержит запрещенное слово: "{word}"')
-        return cleaned_data
+        return name
 
     def clean_description(self):
-        cleaned_data = self.cleaned_data['description']
+        description = self.cleaned_data.get('description')
         for word in self.FORBIDDEN_WORDS:
-            if word in cleaned_data.lower():
+            if word in description.lower():
                 raise forms.ValidationError(f'Описание содержит запрещенное слово: "{word}"')
-        return cleaned_data
+        return description
 
     def clean_price(self):
-        """Валидация цены: она не должна быть отрицательной"""
         price = self.cleaned_data.get('price')
-
-        if price < 0:
-            raise forms.ValidationError('Цена не может быть отрицательной. Пожалуйста, введите корректное значение.')
-
+        if price is not None and price < 0:
+            raise forms.ValidationError('Цена не может быть отрицательной.')
         return price
