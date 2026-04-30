@@ -1,0 +1,52 @@
+{% extends 'catalog/base.html' %}
+{% load static %}
+
+{% block title %}Продукт — {{ object.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+
+            <div class="card h-100 shadow-sm">
+
+                <div style="height: 250px; overflow: hidden;">
+                    {% if object.image %}
+                        <img src="{{ object.image.url }}" alt="{{ object.name }}"
+                             class="card-img-top"
+                             style="height: 100%; width: 100%; object-fit: cover;">
+                    {% else %}
+                        <img src="{% static 'images/no-image.webp' %}" alt="Нет фото"
+                             class="card-img-top"
+                             style="height: 100%; width: 100%; object-fit: cover;">
+                    {% endif %}
+                </div>
+
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-2">
+                        <span class="badge bg-secondary mb-1">{{ object.category.name }}</span>
+                        <h4 class="card-title text-truncate">{{ object.name }}</h4>
+                    </div>
+
+                    <p class="card-text text-muted" style="font-size: 0.9rem;">
+                        {{ object.description|truncatechars:100 }}
+                    </p>
+
+                    <div class="mt-auto">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="h5 mb-0 text-success fw-bold">{{ object.price }} ₽</span>
+                            <small class="text-muted">{{ object.created_at|date:"d.m.Y" }}</small>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'catalog:product' object.pk %}" class="btn btn-primary btn-sm">Подробнее</a>
+                            <button class="btn btn-outline-primary btn-sm">В корзину</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
