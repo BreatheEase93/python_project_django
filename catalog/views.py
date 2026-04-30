@@ -26,20 +26,20 @@ class ProductCreateView(CreateView):
     model = Product
     fields = ['name', 'description', 'image', 'category', 'price']
     template_name = 'catalog/product_form.html'
-    success_url = reverse_lazy('catalog:products')
+    success_url = reverse_lazy('catalog:home')
 
 class ProductUpdateView(UpdateView):
     """Редактирование существующего продукта"""
     model = Product
     fields = ['name', 'description', 'image', 'category', 'price']
     template_name = 'catalog/product_form.html'
-    success_url = reverse_lazy('catalog:products')
+    success_url = reverse_lazy('catalog:home')
 
 class ProductDeleteView(DeleteView):
     """Удаление продукта с подтверждением"""
     model = Product
     template_name = 'catalog/product_confirm_delete.html'
-    success_url = reverse_lazy('catalog:products')
+    success_url = reverse_lazy('catalog:home')
 
 class CategoryListView(ListView):
     """Отображение списка всех категорий товаров"""
