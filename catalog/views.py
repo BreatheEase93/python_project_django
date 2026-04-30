@@ -84,3 +84,9 @@ class FeedbackCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context['contact_data'] = Contact.objects.all()
         return context
+
+    def form_valid(self, form):
+        """Этот метод срабатывает, когда данные в форме верны"""
+        response = super().form_valid(form)
+        print(f"Сообщение сохранено: {self.object.name}")
+        return response
