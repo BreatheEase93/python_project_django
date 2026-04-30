@@ -56,3 +56,17 @@ class Contact(models.Model):
         verbose_name = 'Контакт'
         verbose_name_plural = 'Контакты'
         ordering = ["name"]
+
+class Feedback(models.Model):
+    """Модель для хранения сообщений обратной связи от пользователей"""
+    name = models.CharField(max_length=100, verbose_name='Имя (Компания)')
+    phone = models.CharField(max_length=20, verbose_name='Телефон')
+    message = models.TextField(verbose_name='Адрес или сообщение', blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.phone})"
+
+    class Meta:
+        verbose_name = 'Обратная связь'
+        verbose_name_plural = 'Обратные связи'
+        ordering = ('-id',)

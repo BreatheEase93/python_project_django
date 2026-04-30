@@ -1,53 +1,86 @@
-from django.core.paginator import Paginator
-from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
-from catalog.forms import ProductForm
-from catalog.models import Product, Contact
+from django.urls import reverse_lazy
+from catalog.models import Product, Contact, Feedback, Category
+from django.views.generic import ListView, DetailView
+from django.views.generic.edit import CreateView, UpdateView ,DeleteView
 
 
-def contacts(request):
-    """Контролер страницы contacts.html с обратной связью"""
-    if request.method == "POST":
-        name = request.POST.get("name")
-        phone = request.POST.get("phone")
-        message = request.POST.get("message")
+class ContactsListView(ListView):
+    """Отображение списка контактных данных компании"""
+    model = Contact
+    template_name = 'catalog/contacts.html'
+    context_object_name = 'contacts'
 
-        return HttpResponse (f"Здравствуйте, {name}! Мы с вами свяжемся!")
-    contact_list = Contact.objects.all()
-    return render(request, 'catalog/contacts.html', {'contact_list': contact_list})
+class ProductListView(ListView):
+    """Отображение списка всех доступных продуктов"""
+    model = Product
+    template_name = 'catalog/home.html'
+    context_object_name = 'products'
+
+class ProductDetailView(DetailView):
+    """Отображение детальной информации об одном конкретном продукте"""
+    model = Product
+    template_name = 'catalog/product_detail.html'
+
+class ProductCreateView(CreateView):
+    """Создание нового продукта через форму на сайте"""
+    model = Product
+    fields = ['name', 'description', 'image', 'category', 'price']
+    template_name = 'catalog/product_form.html'
+    success_url = reverse_lazy('catalog:products')
+
+class ProductUpdateView(UpdateView):
+    """Редактирование существующего продукта"""
+    model = Product
+    fields = ['name', 'description', 'image', 'category', 'price']
+    template_name = 'catalog/product_form.html'
+    success_url = reverse_lazy('catalog:products')
+
+class ProductDeleteView(DeleteView):
+    """Удаление продукта с подтверждением"""
+    model = Product
+    template_name = 'catalog/product_confirm_delete.html'
+    success_url = reverse_lazy('catalog:products')
+
+class CategoryListView(ListView):
+    """Отображение списка всех категорий товаров"""
+    model = Category
+    template_name = 'catalog/categories.html'
+    context_object_name = 'categories'
+
+class CategoryCreateView(CreateView):
+    """Добавление новой категории"""
+    model = Category
+    fields = ['name', 'description']
+    template_name = 'catalog/category_form.html'
+    success_url = reverse_lazy('catalog:categories')
+
+class CategoryUpdateView(UpdateView):
+    """Редактирование существующей категории"""
+    model = Category
+    fields = ['name', 'description']
+    template_name = 'catalog/category_form.html'
+    success_url = reverse_lazy('catalog:categories')
+
+class CategoryDeleteView(DeleteView):
+    """Удаление категории"""
+    model = Category
+    template_name = 'catalog/category_confirm_delete.html'
+    success_url = reverse_lazy('catalog:categories')
 
 
+class FeedbackCreateView(CreateView):
+    """
+    Контроллер страницы контактов.
+    Позволяет пользователю отправить сообщение (сохраняется в Feedback)
+    и отображает контактную информацию компании (из Contact).
+    """
+    model = Feedback
+    fields = ['name', 'phone', 'message']
+    template_name = 'catalog/contacts.html'
+    success_url = reverse_lazy('catalog:contacts')
 
-def index(request):
-    """Главная страница: вывод всех товаров с пагинацией"""
-    product_list = Product.objects.all().order_by('-created_at')
-
-    paginator = Paginator(product_list, 6)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    context = {
-        'products': page_obj,
-    }
-    return render(request, 'catalog/home.html', context)
-
-
-def show_product(request, pk: int):
-    """Страница подробной информации о товаре"""
-    product = get_object_or_404(Product, id=pk)
-    context = {
-        "object": product,
-    }
-    return render(request, "catalog/product_detail.html", context)
-
-
-def product_create(request):
-    if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('catalog:index')
-    else:
-        form = ProductForm()
-
-    return render(request, 'catalog/product_form.html', {'form': form})
+    def get_context_data(self, **kwargs):
+        """Здесь мы достаем контакты компании из базы."""
+        context = super().get_context_data(**kwargs)
+        context['contact_data'] = Contact.objects.all()
+        return context
