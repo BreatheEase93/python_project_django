@@ -1,4 +1,6 @@
 from django.urls import reverse_lazy
+
+from catalog.forms import ProductForm
 from catalog.models import Product, Contact, Feedback, Category
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView ,DeleteView
@@ -24,14 +26,14 @@ class ProductDetailView(DetailView):
 class ProductCreateView(CreateView):
     """Создание нового продукта через форму на сайте"""
     model = Product
-    fields = ['name', 'description', 'image', 'category', 'price']
+    form_class = ProductForm
     template_name = 'catalog/product_form.html'
     success_url = reverse_lazy('catalog:home')
 
 class ProductUpdateView(UpdateView):
     """Редактирование существующего продукта"""
     model = Product
-    fields = ['name', 'description', 'image', 'category', 'price']
+    form_class = ProductForm
     template_name = 'catalog/product_form.html'
     success_url = reverse_lazy('catalog:home')
 
