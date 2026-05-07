@@ -8,9 +8,20 @@
                 <h2 class="text-center mb-4">Вход</h2>
                 <form method="post">
                     {% csrf_token %}
+                    <!-- Вывод общих ошибок (например, "Неверный пароль") -->
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger p-2">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <!-- Поля формы (Email и Пароль) -->
                     {{ form.as_p }}
+
                     <button type="submit" class="btn btn-primary w-100">Войти</button>
                 </form>
+
                 <div class="text-center mt-3">
                     <p>Нет аккаунта? <a href="{% url 'users:register' %}">Зарегистрироваться</a></p>
                 </div>
