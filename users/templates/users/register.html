@@ -1,0 +1,14 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-4">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h2 class="text-center">Регистрация</h2>
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary w-100">Создать аккаунт</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

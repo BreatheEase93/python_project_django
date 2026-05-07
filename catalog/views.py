@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 
 from catalog.forms import ProductForm
@@ -18,26 +19,26 @@ class ProductListView(ListView):
     template_name = 'catalog/home.html'
     context_object_name = 'products'
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     """Отображение детальной информации об одном конкретном продукте"""
     model = Product
     template_name = 'catalog/product_detail.html'
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     """Создание нового продукта через форму на сайте"""
     model = Product
     form_class = ProductForm
     template_name = 'catalog/product_form.html'
     success_url = reverse_lazy('catalog:products')
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     """Редактирование существующего продукта"""
     model = Product
     form_class = ProductForm
     template_name = 'catalog/product_form.html'
     success_url = reverse_lazy('catalog:products')
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     """Удаление продукта с подтверждением"""
     model = Product
     template_name = 'catalog/product_confirm_delete.html'

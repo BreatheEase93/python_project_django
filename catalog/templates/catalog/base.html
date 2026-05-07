@@ -1,34 +1,68 @@
-<!doctype html>
 {% load static %}
+<!doctype html>
 <html lang="ru">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Skystore{% endblock %}</title>
+    <!-- Подключаем Bootstrap -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <style>
+        /* Чтобы футер всегда был внизу, если контента мало */
+        body { display: flex; flex-direction: column; min-height: 100vh; }
+        main { flex: 1; }
+    </style>
 </head>
 <body>
 
-    <!-- Включаем подшаблон меню -->
-    {% include 'catalog/includes/inc_main_menu.html' %}
+    <header class="p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+        <div class="container d-flex flex-column flex-md-row align-items-center">
+            <h5 class="my-0 mr-md-auto font-weight-normal">
+                <a href="{% url 'catalog:home' %}" class="text-dark text-decoration-none">SkyStore</a>
+            </h5>
 
-    <main class="container mt-5">
+            <nav class="my-2 my-md-0 me-md-3">
+                <a class="p-2 text-dark" href="{% url 'catalog:home' %}">Каталог</a>
+                <a class="p-2 text-dark" href="{% url 'catalog:contacts' %}">Контакты</a>
+                {% if user.is_authenticated %}
+                    <a class="p-2 text-dark" href="{% url 'users:profile' %}">Профиль</a>
+                {% endif %}
+            </nav>
+
+            <div class="d-flex align-items-center">
+                {% if user.is_authenticated %}
+                    <span class="text-muted me-3">{{ user.email }}</span>
+                    <form method="post" action="{% url 'users:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger btn-sm">Выйти</button>
+                    </form>
+                {% else %}
+                    <a class="btn btn-outline-primary btn-sm me-2" href="{% url 'users:login' %}">Войти</a>
+                    <a class="btn btn-primary btn-sm" href="{% url 'users:register' %}">Регистрация</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
         {% block content %}
-        <!-- Здесь будет уникальный контент каждой страницы -->
         {% endblock %}
     </main>
 
     <footer class="container pt-4 my-md-5 pt-md-5 border-top">
         <div class="row">
-            <div class="col-12 col-md">
-                SkyStore
-                <small class="d-block mb-3 text-muted">&copy; 2023</small>
+            <div class="col-12 col-md-4">
+                <strong>SkyStore</strong>
+                <small class="d-block mb-3 text-muted">&copy; 2023-2024</small>
             </div>
-            <div class="col-6 col-md">
-                <h5>О нас</h5>
+            <div class="col-6 col-md-4">
+                <h5>Помощь</h5>
                 <ul class="list-unstyled text-small">
-                    <li><a class="text-muted" href="{% url 'catalog:contacts' %}">Контакты</a></li>
+                    <li><a class="text-muted" href="{% url 'catalog:contacts' %}">Обратная связь</a></li>
                 </ul>
+            </div>
+            <div class="col-6 col-md-4 text-end">
+                <p class="text-muted">Проект на Django</p>
             </div>
         </div>
     </footer>
