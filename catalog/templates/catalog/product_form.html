@@ -16,7 +16,7 @@
                     {% csrf_token %}
                     {{ form.as_p }}
                     <div class="d-flex justify-content-between mt-4">
-                        <a href="{% url 'catalog:index' %}" class="btn btn-outline-secondary">Отмена</a>
+                        <a href="{% url 'catalog:home' %}" class="btn btn-outline-secondary">Отмена</a>
                         <button type="submit" class="btn btn-success">Сохранить продукт</button>
                     </div>
                 </form>

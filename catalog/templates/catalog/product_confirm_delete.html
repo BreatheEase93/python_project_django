@@ -10,7 +10,7 @@
                 <form method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger btn-lg px-5">Да, удалить</button>
-                    <a href="{% url 'catalog:index' %}" class="btn btn-secondary btn-lg px-5">Отмена</a>
+                    <a href="{% url 'catalog:home' %}" class="btn btn-secondary btn-lg px-5">Отмена</a>
                 </form>
             </div>
         </div>

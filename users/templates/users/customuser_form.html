@@ -1,0 +1,21 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <h2 class="mb-4">Профиль пользователя</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% if user.avatar %}
+                        <img src="{{ user.avatar.url }}" class="img-thumbnail mb-3" style="width: 150px;">
+                    {% endif %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
