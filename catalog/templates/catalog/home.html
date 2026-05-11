@@ -45,14 +45,17 @@
                 <h1 class="card-title pricing-card-title">{{ product.price }} ₽</h1>
                 <p class="text-start flex-grow-1">{{ product.description|truncatechars:100 }}</p>
 
-                <div class="btn-group w-100 mt-auto">
-                    <!-- Кнопки управления видны только авторизованным -->
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-sm btn-outline-primary">Инфо</a>
+                <div class="btn-group">
+                    <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-sm btn-outline-primary">Инфо</a>
+
+                    <!-- Только владелец или модератор с правом правки -->
+                    {% if user == product.owner or perms.catalog.can_unpublish_product %}
                         <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-sm btn-outline-secondary">Изменить</a>
+                    {% endif %}
+
+                    <!-- Только владелец или модератор с правом удаления -->
+                    {% if user == product.owner or perms.catalog.delete_product %}
                         <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-sm btn-outline-danger">Удалить</a>
-                    {% else %}
-                        <a href="{% url 'users:login' %}" class="btn btn-sm btn-block btn-outline-primary">Войдите для покупки</a>
                     {% endif %}
                 </div>
             </div>
