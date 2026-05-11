@@ -1,6 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, path
+from django.views.decorators.cache import cache_page
 
+from blog import views
 from catalog.forms import ProductForm
 from catalog.models import Product, Contact, Feedback, Category
 from django.views.generic import ListView, DetailView
@@ -23,6 +25,10 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
     """Отображение детальной информации об одном конкретном продукте"""
     model = Product
     template_name = 'catalog/product_detail.html'
+    urlpatterns = [
+        # Кешируем на 15 минут (60 сек * 15)
+        path('product/<int:pk>/', cache_page(60 * 15)(views.ProductDetailView.as_view()), name='product_detail'),
+    ]
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
     """Создание нового продукта через форму на сайте"""
