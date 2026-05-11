@@ -39,6 +39,8 @@ CACHES = {
 }
 
 # Application definition
+# Кэш
+CACHE_ENABLED = os.getenv('CACHE_ENABLED') == 'True'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
