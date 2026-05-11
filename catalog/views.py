@@ -29,7 +29,7 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     template_name = 'catalog/product_form.html'
-    success_url = reverse_lazy('catalog:products')
+    success_url = reverse_lazy('catalog:home')
 
     def form_valid(self, form):
         # Автоматически привязываем владельца
@@ -41,7 +41,7 @@ class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'catalog/product_form.html'
-    success_url = reverse_lazy('catalog:products')
+    success_url = reverse_lazy('catalog:home')
 
     def test_func(self):
         # Редактировать может владелец или модератор (если есть право на изменение)
@@ -53,7 +53,7 @@ class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """Удаление продукта с подтверждением"""
     model = Product
     template_name = 'catalog/product_confirm_delete.html'
-    success_url = reverse_lazy('catalog:products')
+    success_url = reverse_lazy('catalog:home')
 
     def test_func(self):
         # Удалять может владелец или модератор
@@ -72,20 +72,20 @@ class CategoryCreateView(CreateView):
     model = Category
     fields = ['name', 'description']
     template_name = 'catalog/category_form.html'
-    success_url = reverse_lazy('catalog:categories')
+    success_url = reverse_lazy('catalog:home')
 
 class CategoryUpdateView(UpdateView):
     """Редактирование существующей категории"""
     model = Category
     fields = ['name', 'description']
     template_name = 'catalog/category_form.html'
-    success_url = reverse_lazy('catalog:categories')
+    success_url = reverse_lazy('catalog:home')
 
 class CategoryDeleteView(DeleteView):
     """Удаление категории"""
     model = Category
     template_name = 'catalog/category_confirm_delete.html'
-    success_url = reverse_lazy('catalog:categories')
+    success_url = reverse_lazy('catalog:home')
 
 
 class FeedbackCreateView(CreateView):

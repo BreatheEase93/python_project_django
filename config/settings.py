@@ -1,5 +1,7 @@
 from pathlib import Path
 import os
+
+import django.db.models
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
@@ -29,7 +31,16 @@ DEBUG = True if os.getenv("DEBUG") == "True" else False
 ALLOWED_HOSTS = []
 
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+    }
+}
+
 # Application definition
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
