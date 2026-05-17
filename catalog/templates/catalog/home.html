@@ -1,0 +1,77 @@
+{% extends 'catalog/base.html' %}
+{% load static %}
+
+{% block title %}
+    Главная - Skystore
+{% endblock %}
+
+{% block content %}
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Каталог товаров</h1>
+
+    <!-- Приветствие пользователя -->
+
+    <div class="mb-3">
+        {% if user.is_authenticated %}
+            <p class="text-muted">Вы вошли как: <strong>{{ user.email }}</strong></p>
+        {% else %}
+            <p class="text-muted">Вы просматриваете каталог как гость. Чтобы управлять товарами, <a href="{% url 'users:login' %}">войдите в аккаунт</a>.</p>
+        {% endif %}
+    </div>
+
+    <p class="lead">Последние поступления в наш магазин</p>
+
+    <!-- Кнопка "Добавить" видна только авторизованным -->
+    {% if user.is_authenticated %}
+        <a href="{% url 'catalog:product_create' %}" class="btn btn-success">Добавить товар</a>
+    {% endif %}
+</div>
+
+<div class="row text-center mt-4">
+    {% for product in products %}
+    <div class="col-md-4 d-flex align-items-stretch">
+        <div class="card mb-4 box-shadow w-100 d-flex flex-column">
+            <div class="mb-2 text-start">
+                <span class="badge bg-info text-dark">Категория:</span>
+                <!-- Используем product.category.pk, так как мы внутри цикла по продуктам -->
+                <a href="{% url 'catalog:category_products' product.category.pk %}" class="text-decoration-none fw-bold">
+                    {{ product.category.name }}
+                </a>
+            </div>
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">{{ product.name }}</h4>
+            </div>
+            <div class="card-body d-flex flex-column flex-grow-1">
+                <!-- Логика вывода изображения -->
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="img-fluid mb-3" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                    <img src="{% static 'images/no-image.webp' %}" class="img-fluid mb-3" alt="Нет фото" style="height: 200px; object-fit: cover;">
+                {% endif %}
+
+                <h1 class="card-title pricing-card-title">{{ product.price }} ₽</h1>
+                <p class="text-start flex-grow-1">{{ product.description|truncatechars:100 }}</p>
+
+                <div class="btn-group">
+                    <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-sm btn-outline-primary">Инфо</a>
+
+                    <!-- Только владелец или модератор с правом правки -->
+                    {% if user == product.owner or perms.catalog.can_unpublish_product %}
+                        <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-sm btn-outline-secondary">Изменить</a>
+                    {% endif %}
+
+                    <!-- Только владелец или модератор с правом удаления -->
+                    {% if user == product.owner or perms.catalog.delete_product %}
+                        <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-sm btn-outline-danger">Удалить</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center">
+        <p class="alert alert-secondary">В каталоге пока нет ни одного товара.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

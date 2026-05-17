@@ -1,0 +1,91 @@
+[
+{
+    "model": "catalog.category",
+    "pk": 1,
+    "fields": {
+        "name": "Бытовая техника",
+        "description": "Полезные устройства для дома и кухни"
+    }
+},
+{
+    "model": "catalog.category",
+    "pk": 2,
+    "fields": {
+        "name": "Мебель",
+        "description": "Уют и комфорт для вашего интерьера"
+    }
+},
+{
+    "model": "catalog.category",
+    "pk": 3,
+    "fields": {
+        "name": "Спорт и отдых",
+        "description": "Все для активного образа жизни"
+    }
+},
+{
+    "model": "catalog.product",
+    "pk": 1,
+    "fields": {
+        "name": "Кофемашина",
+        "description": "Автоматическая кофемашина с капучинатором",
+        "image": "",
+        "category": 1,
+        "price": "45000.00",
+        "created_at": "2026-04-27T14:23:33.054Z",
+        "updated_at": "2026-04-27T14:23:33.054Z"
+    }
+},
+{
+    "model": "catalog.product",
+    "pk": 3,
+    "fields": {
+        "name": " Кресло-мешок",
+        "description": "Мягкое бескаркасное кресло с эффектом памяти",
+        "image": "",
+        "category": 2,
+        "price": "4200.00",
+        "created_at": "2026-04-27T14:26:31.559Z",
+        "updated_at": "2026-04-27T14:26:31.559Z"
+    }
+},
+{
+    "model": "catalog.product",
+    "pk": 4,
+    "fields": {
+        "name": "Стол трансформер",
+        "description": "Складной обеденный стол из массива дуба",
+        "image": "",
+        "category": 2,
+        "price": "12500.00",
+        "created_at": "2026-04-27T14:27:25.512Z",
+        "updated_at": "2026-04-27T14:27:25.512Z"
+    }
+},
+{
+    "model": "catalog.product",
+    "pk": 5,
+    "fields": {
+        "name": "Горный велосипед",
+        "description": "Велосипед с 21 скоростью и амортизационной вилкой",
+        "image": "",
+        "category": 3,
+        "price": "35000.00",
+        "created_at": "2026-04-27T14:28:25.915Z",
+        "updated_at": "2026-04-27T14:28:25.915Z"
+    }
+},
+{
+    "model": "catalog.product",
+    "pk": 6,
+    "fields": {
+        "name": "Коврик для йоги",
+        "description": "Нескользящее покрытие для тренировок дома и в зале",
+        "image": "",
+        "category": 3,
+        "price": "1800.00",
+        "created_at": "2026-04-27T14:29:22.591Z",
+        "updated_at": "2026-04-27T14:29:22.591Z"
+    }
+}
+]
