@@ -9,6 +9,8 @@ from catalog.models import Product, Contact, Feedback, Category
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView ,DeleteView
 
+from catalog.services import get_products_by_category
+
 
 class ContactsListView(ListView):
     """Отображение списка контактных данных компании"""
@@ -125,3 +127,17 @@ class FeedbackCreateView(CreateView):
         response = super().form_valid(form)
         print(f"Сообщение сохранено: {self.object.name}")
         return response
+
+class CategoryProductsListView(ListView):
+    """Отображение продуктов конкретной категории с использованием сервисной функции"""
+    template_name = 'catalog/category_products.html'
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        self.category_id = self.kwargs.get('pk')
+        return get_products_by_category(self.category_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = Category.objects.get(pk=self.category_id)
+        return context
