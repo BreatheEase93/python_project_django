@@ -1,10 +1,15 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.urls import reverse_lazy
-
+from django.urls import reverse_lazy, path
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
+from django.conf import settings
+from blog import views
 from catalog.forms import ProductForm
 from catalog.models import Product, Contact, Feedback, Category
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView ,DeleteView
+
+from catalog.services import get_products_by_category
 
 
 class ContactsListView(ListView):
@@ -19,10 +24,22 @@ class ProductListView(ListView):
     template_name = 'catalog/home.html'
     context_object_name = 'products'
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if settings.CACHE_ENABLED:
+            key = 'products_list'
+            cache_data = cache.get(key)
+            if cache_data is None:
+                cache_data = queryset
+                cache.set(key, cache_data)
+            return cache_data
+        return queryset
+
 class ProductDetailView(LoginRequiredMixin, DetailView):
     """Отображение детальной информации об одном конкретном продукте"""
     model = Product
     template_name = 'catalog/product_detail.html'
+    context_object_name = 'product'
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
     """Создание нового продукта через форму на сайте"""
@@ -72,20 +89,20 @@ class CategoryCreateView(CreateView):
     model = Category
     fields = ['name', 'description']
     template_name = 'catalog/category_form.html'
-    success_url = reverse_lazy('catalog:categories')
+    success_url = reverse_lazy('catalog:home')
 
 class CategoryUpdateView(UpdateView):
     """Редактирование существующей категории"""
     model = Category
     fields = ['name', 'description']
     template_name = 'catalog/category_form.html'
-    success_url = reverse_lazy('catalog:categories')
+    success_url = reverse_lazy('catalog:home')
 
 class CategoryDeleteView(DeleteView):
     """Удаление категории"""
     model = Category
     template_name = 'catalog/category_confirm_delete.html'
-    success_url = reverse_lazy('catalog:categories')
+    success_url = reverse_lazy('catalog:home')
 
 
 class FeedbackCreateView(CreateView):
@@ -110,3 +127,17 @@ class FeedbackCreateView(CreateView):
         response = super().form_valid(form)
         print(f"Сообщение сохранено: {self.object.name}")
         return response
+
+class CategoryProductsListView(ListView):
+    """Отображение продуктов конкретной категории с использованием сервисной функции"""
+    template_name = 'catalog/category_products.html'
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        self.category_id = self.kwargs.get('pk')
+        return get_products_by_category(self.category_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = Category.objects.get(pk=self.category_id)
+        return context

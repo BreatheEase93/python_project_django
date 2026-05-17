@@ -31,6 +31,13 @@
     {% for product in products %}
     <div class="col-md-4 d-flex align-items-stretch">
         <div class="card mb-4 box-shadow w-100 d-flex flex-column">
+            <div class="mb-2 text-start">
+                <span class="badge bg-info text-dark">Категория:</span>
+                <!-- Используем product.category.pk, так как мы внутри цикла по продуктам -->
+                <a href="{% url 'catalog:category_products' product.category.pk %}" class="text-decoration-none fw-bold">
+                    {{ product.category.name }}
+                </a>
+            </div>
             <div class="card-header">
                 <h4 class="my-0 font-weight-normal">{{ product.name }}</h4>
             </div>
